@@ -16,8 +16,10 @@ def main() -> None:
   print("🎮 Setting up mjlab demo with pretrained tracking policy...")
 
   try:
-    checkpoint_path = ensure_default_checkpoint()
-    motion_path = ensure_default_motion()
+    # checkpoint_path = ensure_default_checkpoint()
+    # motion_path = ensure_default_motion()
+    checkpoint_path = "/home/yun/data/git_projects/mjlab/models/demo/demo_ckpt.pt"
+    motion_path = "/home/yun/data/git_projects/mjlab/models/demo/lafan1_dance1_subject1_demo_motion.npz"
   except RuntimeError as e:
     print(f"❌ Failed to download demo assets: {e}")
     print("Please check your internet connection and try again.")
