@@ -1,0 +1,39 @@
+<mujoco model="balance_car">
+  <compiler angle="radian" meshdir="meshes"/>
+
+  <asset>
+    <mesh name="base_link" content_type="model/stl" file="base_link.STL"/>
+    <mesh name="left_wheel_link" content_type="model/stl" file="left_wheel_link.STL"/>
+    <mesh name="right_wheel_link" content_type="model/stl" file="right_wheel_link.STL"/>
+  </asset>
+
+  <worldbody>
+    <!-- <geom name="ground" type="plane" pos="0 0 0" size="10 10 0.1"  rgba="0.9 0.9 0.9 1" friction="1 0.5 0.5"/> -->
+
+    <body name="base_link" pos="0 0 0.03">
+      <inertial pos="0 0 0.035" quat="0.707107 0.707107 0 0" mass="1" diaginertia="0.00094167 0.00083333 0.00070833"/>
+      <joint name="floating_base_joint" type="free"/>
+      <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.95686 0.84706 0.58039 1" mesh="base_link"/>
+      <geom name="base_collision" size="0.03 0.04 0.035" pos="0 0 0.035" type="box" rgba="0.95686 0.84706 0.58039 1"/>
+      <site name="imu_in_base" size="0.01" pos="0 0 0.035"/>
+      <body name="left_wheel_link" pos="0 0.04 0">
+        <inertial pos="-0.0001449 0.0225 0.00026239" quat="0.608846 0.359592 0.359592 0.608846" mass="0.3" diaginertia="0.0001474 0.000125721 0.000122929"/>
+        <joint name="left_wheel_joint" pos="0 0 0" axis="0 -1 0"/>
+        <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.90588 0.21569 0.20784 1" mesh="left_wheel_link"/>
+        <geom name="left_wheel_collision" size="0.03 0.0225" pos="0 0.0225 0" quat="0.707105 0.707108 0 0" type="cylinder" rgba="0.90588 0.21569 0.20784 1"/>
+      </body>
+      <body name="right_wheel_link" pos="0 -0.04 0">
+        <inertial pos="-0.0001449 -0.0225 0.00026239" quat="0.608846 0.359592 0.359592 0.608846" mass="0.3" diaginertia="0.0001474 0.000125721 0.000122929"/>
+        <joint name="right_wheel_joint" pos="0 0 0" axis="0 -1 0"/>
+        <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.90588 0.21569 0.20784 1" mesh="right_wheel_link"/>
+        <geom name="right_wheel_collision" size="0.03 0.0225" pos="0 -0.0225 0" quat="0.707105 0.707108 0 0" type="cylinder" rgba="0.90588 0.21569 0.20784 1"/>
+      </body>
+    </body>
+  </worldbody>
+  <sensor>
+    <gyro name="imu_ang_vel" site="imu_in_base"/>
+    <velocimeter name="imu_lin_vel" site="imu_in_base"/>
+    <accelerometer name="imu_lin_acc" site="imu_in_base"/>
+    <framezaxis name="imu_upvector" objtype="body" objname="world" reftype="site" refname="imu_in_base"/>
+  </sensor>
+</mujoco>
