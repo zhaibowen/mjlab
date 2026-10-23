@@ -4,7 +4,7 @@ import mujoco
 import mujoco.viewer as viewer
 
 from mjlab import MJLAB_SRC_PATH
-from mjlab.actuator import BuiltinVelocityActuatorCfg
+from mjlab.actuator import BuiltinMotorActuatorCfg
 from mjlab.entity import EntityArticulationInfoCfg, EntityCfg
 from mjlab.utils.actuator import (
   ElectricActuator,
@@ -41,13 +41,8 @@ ACTUATOR_4010 = ElectricActuator(
   effort_limit=10.0,
 )
 
-NATURAL_FREQ = 10 * 2.0 * 3.1415926535  # 10Hz
-DAMPING_RATIO = 1.0
-DAMPING_4010 = 2.0 * DAMPING_RATIO * ARMATURE_4010 * NATURAL_FREQ
-
-BC_ACTUATOR_4010 = BuiltinVelocityActuatorCfg(
+BC_ACTUATOR_4010 = BuiltinMotorActuatorCfg(
   target_names_expr=(".*_wheel_joint", ),
-  damping=DAMPING_4010,
   effort_limit=ACTUATOR_4010.effort_limit,
   armature=ACTUATOR_4010.reflected_inertia,
 )
@@ -79,10 +74,11 @@ def get_balance_car_cfg() -> EntityCfg:
 
 BALANCE_CAR_ACTION_SCALE: dict[str, float] = {}
 for a in BC_ARTICULATION.actuators:
-  assert isinstance(a, BuiltinVelocityActuatorCfg)
+  assert isinstance(a, BuiltinMotorActuatorCfg)
+  e = a.effort_limit
   names = a.target_names_expr
   for n in names:
-    BALANCE_CAR_ACTION_SCALE[n] = 0.8 * ACTUATOR_4010.velocity_limit
+    BALANCE_CAR_ACTION_SCALE[n] = 0.25 * e
 
 if __name__ == "__main__":
   import mujoco.viewer as viewer
