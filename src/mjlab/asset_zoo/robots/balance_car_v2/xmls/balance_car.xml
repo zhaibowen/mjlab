@@ -1,0 +1,60 @@
+<mujoco model="balance_car">
+  <compiler angle="radian" meshdir="meshes"/>
+
+  <default>
+    <default class="collision">
+      <geom group="3" rgba=".2 .6 .2 .3" contype="1" conaffinity="1"/>
+    </default>
+  </default>
+
+  <asset>
+    <mesh name="base_link" content_type="model/stl" file="base_link.STL"/>
+    <mesh name="left_motor_link" content_type="model/stl" file="left_motor_link.STL"/>
+    <mesh name="left_wheel_link" content_type="model/stl" file="left_wheel_link.STL"/>
+    <mesh name="right_motor_link" content_type="model/stl" file="right_motor_link.STL"/>
+    <mesh name="right_wheel_link" content_type="model/stl" file="right_wheel_link.STL"/>
+    <mesh name="battery_link" content_type="model/stl" file="battery_link.STL"/>
+  </asset>
+
+  <worldbody>
+    <geom name="ground" type="plane" pos="0 0 0" size="10 10 0.1"  rgba="0.9 0.9 0.9 1" friction="1 0.5 0.5"/>
+
+    <body name="base_link" pos="0 0 0.0625">
+      <inertial pos="-0.000285909 -1.56168e-05 0.0168426" quat="0.999998 -0.0017369 0.000660001 0.00084368" mass="0.1488" diaginertia="0.000139488 9.20683e-05 8.86603e-05"/>
+      <joint name="floating_base_joint" type="free"/>
+      <geom quat="1 0 0 0" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.00784314 0.584314 0.34902 1" density="0" mesh="base_link"/>
+      <geom name="base_link_collision" size="0.025 0.04 0.035" type="box" class="collision"/>
+      <site name="imu_in_base" size="0.005" pos="0 0 0"/>
+      <body name="left_motor_link" pos="-0.0002311 0.035 -0.016">
+        <inertial pos="0 0.031074 0" quat="0.707107 0.707107 0 0" mass="0.1092" diaginertia="8.06942e-05 8.06942e-05 7.205e-05"/>
+        <joint name="left_motor_joint" axis="0 -1 0"/>
+        <geom quat="1 0 0 0" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.92941 0.65098 0.61569 1" density="0" mesh="left_motor_link"/>
+        <geom name="left_motor_collision" size="0.0141 0.015" pos="0 0.017 0" quat="0.707105 0.707108 0 0" type="cylinder" class="collision"/>
+        <frame pos="0 0.0285 0">
+          <geom quat="1 0 0 0" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.792157 0.819608 0.933333 1" density="0" mesh="left_wheel_link"/>
+          <geom name="left_wheel_collision" size="0.0465 0.02" pos="0 0.02 0" quat="0.707105 0.707108 0 0" type="cylinder" class="collision"/>
+        </frame>
+      </body>
+      <body name="right_motor_link" pos="-0.0002311 -0.035 -0.016">
+        <inertial pos="0 -0.0310738 0" quat="0.707107 0.707107 0 0" mass="0.1092" diaginertia="8.06951e-05 8.06951e-05 7.205e-05"/>
+        <joint name="right_motor_joint" axis="0 -1 0"/>
+        <geom quat="1 0 0 0" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.933333 0.988235 0.752941 1" density="0" mesh="right_motor_link"/>
+        <geom name="right_motor_collision" size="0.0141 0.015" pos="0 -0.017 0" quat="0.707105 0.707108 0 0" type="cylinder" class="collision"/>
+        <frame pos="0 -0.0285 0">
+          <geom quat="1 0 0 0" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.458824 0.4 0.0196078 1" density="0" mesh="right_wheel_link"/>
+          <geom name="right_wheel_collision" size="0.0465 0.02" pos="0 -0.02 0" quat="0.707105 0.707108 0 0" type="cylinder" class="collision"/>
+        </frame>
+      </body>
+      <frame pos="0 0 0.0324">
+        <geom quat="1 0 0 0" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.51765 0.054902 0.50196 1" density="0" mesh="battery_link"/>
+        <geom name="battery_collision" size="0.025 0.04 0.01" type="box" class="collision"/>
+      </frame>
+    </body>
+  </worldbody>
+  <sensor>
+    <gyro name="imu_ang_vel" site="imu_in_base"/>
+    <velocimeter name="imu_lin_vel" site="imu_in_base"/>
+    <accelerometer name="imu_lin_acc" site="imu_in_base"/>
+    <framezaxis name="imu_upvector" objtype="body" objname="world" reftype="site" refname="imu_in_base"/>
+  </sensor>
+</mujoco>

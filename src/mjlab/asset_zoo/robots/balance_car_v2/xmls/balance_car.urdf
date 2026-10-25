@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot
+  name="balance_car">
+
+  <mujoco>
+    <compiler meshdir="D:\\Git-Project\\mjlab\\src\\mjlab\\asset_zoo\\robots\\balance_car_v2\\xmls\\meshes" discardvisual="false"/>
+  </mujoco>
+
+  <!-- [CAUTION] uncomment when convert to mujoco -->
+  <link name="world"></link>
+  <joint name="floating_base_joint" type="floating">
+    <parent link="world"/>
+    <child link="base_link"/>
+  </joint>
+
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="-0.00033330 -0.00002912 -0.00120906"
+        rpy="0 0 0" />
+      <mass
+        value="0.0798" />
+      <inertia
+        ixx="0.00006057"
+        ixy="0.00000008"
+        ixz="0.00000008"
+        iyy="0.00002702"
+        iyz="0.00000003"
+        izz="0.00005851" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.00784313725490196 0.584313725490196 0.349019607843137 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <box size="0.05 0.08 0.07" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="left_motor_link">
+    <inertial>
+      <origin
+        xyz="-8.2708E-18 0.013042 3.4512E-18"
+        rpy="0 0 0" />
+      <mass
+        value="0.0535" />
+      <inertia
+        ixx="0.00000572"
+        ixy="0"
+        ixz="0"
+        iyy="0.00000531"
+        iyz="0"
+        izz="0.00000572" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="left_motor_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.92941 0.65098 0.61569 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0.017 0"
+        rpy="1.5708 0 0" />
+      <geometry>
+        <cylinder radius="0.0141" length="0.03" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left_motor_joint"
+    type="continuous">
+    <origin
+      xyz="-0.0002311 0.035 -0.016"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="left_motor_link" />
+    <axis
+      xyz="0 -1 0" />
+  </joint>
+  <link
+    name="left_wheel_link">
+    <inertial>
+      <origin
+        xyz="1.88698920351648E-17 0.0198937482120517 -1.96862958572173E-16"
+        rpy="0 0 0" />
+      <mass
+        value="0.0557" />
+      <inertia
+        ixx="0.00004087"
+        ixy="0"
+        ixz="0"
+        iyy="0.00006674"
+        iyz="0"
+        izz="0.00004087" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="left_wheel_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0.02 0"
+        rpy="1.5708 0 0" />
+      <geometry>
+        <cylinder radius="0.0465" length="0.04" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left_wheel_joint"
+    type="fixed">
+    <origin
+      xyz="0 0.0285 0"
+      rpy="0 0 0" />
+    <parent
+      link="left_motor_link" />
+    <child
+      link="left_wheel_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="right_motor_link">
+    <inertial>
+      <origin
+        xyz="-1.07008224488726E-16 -0.0130415362137341 -3.30590041241462E-17"
+        rpy="0 0 0" />
+      <mass
+        value="0.0535" />
+      <inertia
+        ixx="0.00000572"
+        ixy="0"
+        ixz="0"
+        iyy="0.00000531"
+        iyz="0"
+        izz="0.00000572" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="right_motor_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.933333333333333 0.988235294117647 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 -0.017 0"
+        rpy="1.5708 0 0" />
+      <geometry>
+        <cylinder radius="0.0141" length="0.03" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_motor_joint"
+    type="continuous">
+    <origin
+      xyz="-0.0002311 -0.035 -0.016"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="right_motor_link" />
+    <axis
+      xyz="0 -1 0" />
+  </joint>
+  <link
+    name="right_wheel_link">
+    <inertial>
+      <origin
+        xyz="3.43909122104648E-17 -0.0198937482120518 -1.36974312093742E-17"
+        rpy="0 0 0" />
+      <mass
+        value="0.0557" />
+      <inertia
+        ixx="0.00004087"
+        ixy="0"
+        ixz="0"
+        iyy="0.00006674"
+        iyz="0"
+        izz="0.00004087" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="right_wheel_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.458823529411765 0.4 0.0196078431372549 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 -0.02 0"
+        rpy="1.5708 0 0" />
+      <geometry>
+        <cylinder radius="0.0465" length="0.04" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_wheel_joint"
+    type="fixed">
+    <origin
+      xyz="0 -0.0285 0"
+      rpy="0 0 0" />
+    <parent
+      link="right_motor_link" />
+    <child
+      link="right_wheel_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="battery_link">
+    <inertial>
+      <origin
+        xyz="-0.0002311 1.9906E-16 0.0053198"
+        rpy="0 0 0" />
+      <mass
+        value="0.069" />
+      <inertia
+        ixx="0.00002284"
+        ixy="0"
+        ixz="0"
+        iyy="0.00000897"
+        iyz="0"
+        izz="0.00003015" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="battery_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.51765 0.054902 0.50196 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <box size="0.05 0.08 0.02" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="battery_joint"
+    type="fixed">
+    <origin
+      xyz="0 0 0.0324"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="battery_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+</robot>
