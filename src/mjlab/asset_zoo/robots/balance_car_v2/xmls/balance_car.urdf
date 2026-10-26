@@ -3,7 +3,7 @@
   name="balance_car">
 
   <mujoco>
-    <compiler meshdir="D:\\Git-Project\\mjlab\\src\\mjlab\\asset_zoo\\robots\\balance_car_v2\\xmls\\meshes" discardvisual="false"/>
+    <compiler meshdir="/home/yun/data/git_projects/mjlab/src/mjlab/asset_zoo/robots/balance_car_v2/xmls/meshes" discardvisual="false"/>
   </mujoco>
 
   <!-- [CAUTION] uncomment when convert to mujoco -->

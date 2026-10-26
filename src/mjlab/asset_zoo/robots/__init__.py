@@ -28,3 +28,9 @@ from mjlab.asset_zoo.robots.balance_car.bc_constants import (
 from mjlab.asset_zoo.robots.balance_car.bc_constants import (
     get_balance_car_cfg as get_balance_car_cfg,
 )
+from mjlab.asset_zoo.robots.balance_car_v2.bc_constants import (
+    BALANCE_CAR_ACTION_SCALE as BALANCE_CAR_ACTION_SCALE_V2,
+)
+from mjlab.asset_zoo.robots.balance_car_v2.bc_constants import (
+    get_balance_car_cfg as get_balance_car_cfg_v2,
+)

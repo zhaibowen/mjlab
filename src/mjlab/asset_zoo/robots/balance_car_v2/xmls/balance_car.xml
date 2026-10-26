@@ -20,7 +20,7 @@
     <geom name="ground" type="plane" pos="0 0 0" size="10 10 0.1"  rgba="0.9 0.9 0.9 1" friction="1 0.5 0.5"/>
 
     <body name="base_link" pos="0 0 0.0625">
-      <inertial pos="-0.000285909 -1.56168e-05 0.0168426" quat="0.999998 -0.0017369 0.000660001 0.00084368" mass="0.1488" diaginertia="0.000139488 9.20683e-05 8.86603e-05"/>
+      <inertial pos="-0.000285909 -1.56168e-05 0.0168426" quat="0.999979 -0.00635749 0.00144309 9.28933e-06" mass="0.1488" diaginertia="0.000139718 9.20089e-05 8.87095e-05"/>
       <joint name="floating_base_joint" type="free"/>
       <geom quat="1 0 0 0" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.00784314 0.584314 0.34902 1" density="0" mesh="base_link"/>
       <geom name="base_link_collision" size="0.025 0.04 0.035" type="box" class="collision"/>
