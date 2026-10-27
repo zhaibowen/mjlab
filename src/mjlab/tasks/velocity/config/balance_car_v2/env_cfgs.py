@@ -26,13 +26,23 @@ from mjlab.terrains import TerrainEntityCfg
 from mjlab.utils.noise import UniformNoiseCfg as Unoise
 from mjlab.viewer import ViewerConfig
 
-def joint_angle_cos_sin(
+def generated_commands(env: ManagerBasedRlEnv, command_name: str) -> torch.Tensor:
+  command = mdp.generated_commands(env, command_name)
+  return command[:, [0, 2]]
+
+def stand_pose(
   env: ManagerBasedRlEnv,
-  biased: bool = False,
-  asset_cfg: SceneEntityCfg = SceneEntityCfg("robot"),
-) -> torch.Tensor:
-  angle = mdp.joint_pos_rel(env, biased, asset_cfg)
-  return torch.cat([torch.cos(angle), torch.sin(angle)], dim=-1)
+  command_name: str,
+  asset_cfg: SceneEntityCfg
+):
+  asset = env.scene[asset_cfg.name]
+  command = env.command_manager.get_command(command_name)
+  linear_speed = torch.abs(command[:, 0])
+  angular_speed = torch.abs(command[:, 2])
+  total_speed = linear_speed + angular_speed
+  joint_vel_squared = torch.square(asset.data.joint_vel)
+  stand_reward = torch.exp(-torch.mean(joint_vel_squared / (0.3**2), dim=1))
+  return torch.where(total_speed < 0.01, stand_reward, 0)
 
 def balance_car_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   actor_terms = {
@@ -45,18 +55,13 @@ def balance_car_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
       func=mdp.projected_gravity,
       noise=Unoise(n_min=-0.05, n_max=0.05),
     ),
-    "joint_pos": ObservationTermCfg(
-      func=joint_angle_cos_sin,
-      params={"biased": True},
-      noise=Unoise(n_min=-0.01, n_max=0.01),
-    ),
     "joint_vel": ObservationTermCfg(
       func=mdp.joint_vel_rel,
       noise=Unoise(n_min=-0.6, n_max=0.6),
     ),
     "actions": ObservationTermCfg(func=mdp.last_action),
     "command": ObservationTermCfg(
-      func=mdp.generated_commands,
+      func=generated_commands,
       params={"command_name": "twist"},
     ),
   }
@@ -90,9 +95,8 @@ def balance_car_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
     "twist": UniformVelocityCommandCfg(
       entity_name="robot",
       resampling_time_range=(3.0, 8.0),
-      rel_standing_envs=0.1,
-      rel_heading_envs=0.3,
-      rel_forward_envs=0.2,
+      rel_standing_envs=0.2,
+      rel_heading_envs=0.2,
       heading_command=True,
       heading_control_stiffness=0.5,
       debug_vis=True,
@@ -196,6 +200,14 @@ def balance_car_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
         "asset_cfg": SceneEntityCfg("robot", body_names=("base_link",)),  # Set per-robot.
       },
     ),
+    "stand_pose": RewardTermCfg(
+      func=stand_pose,
+      weight=5.0,
+      params={
+        "command_name": "twist",
+        "asset_cfg": SceneEntityCfg("robot", joint_names=(".*",)),
+      },
+    ),
     "body_ang_vel": RewardTermCfg(
       func=mdp.body_angular_velocity_penalty,
       weight=-0.05,  # Override per-robot
@@ -249,7 +261,6 @@ def balance_car_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
     cfg.episode_length_s = int(1e9)
 
     cfg.observations["actor"].enable_corruption = False
-    cfg.events.pop("push_robot", None)
     cfg.curriculum = {}
 
     twist_cmd = cfg.commands["twist"]
@@ -257,5 +268,12 @@ def balance_car_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
     twist_cmd.ranges.lin_vel_x = (-0.5, 0.5)
     twist_cmd.ranges.lin_vel_y = (-0.1, 0.1)
     twist_cmd.ranges.ang_vel_z = (-1.5, 1.5)
+
+    cfg.events.pop("reset_base", None)
+    cfg.events.pop("reset_robot_joints", None)
+    cfg.events.pop("push_robot", None)
+    cfg.events.pop("foot_friction", None)
+    cfg.events.pop("encoder_bias", None)
+    cfg.events.pop("base_com", None)
 
   return cfg
