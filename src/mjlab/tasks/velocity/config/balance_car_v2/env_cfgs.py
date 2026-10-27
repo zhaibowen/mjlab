@@ -37,6 +37,7 @@ def stand_pose(
 ):
   asset = env.scene[asset_cfg.name]
   command = env.command_manager.get_command(command_name)
+  assert command is not None
   linear_speed = torch.abs(command[:, 0])
   angular_speed = torch.abs(command[:, 2])
   total_speed = linear_speed + angular_speed
