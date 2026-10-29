@@ -1,3 +1,4 @@
+import os
 import torch
 from tensordict import TensorDict
 import numpy as np
@@ -33,6 +34,10 @@ def verify_onnx_consistency(pytorch_model, onnx_path, dummy_input):
     print(ort_output_np)
 
 if __name__ == "__main__":
+    cur_dir = "D:\\Git-Project\\mjlab\\src\\mjlab\\tasks\\velocity\\config\\balance_car_v2"
+    model_path = os.path.join(cur_dir, 'model_999.pt')
+    onnx_model_path = os.path.join(cur_dir, "2026-10-27_11-58-34.onnx")
+    
     device = 'cpu'
     obs = TensorDict(
         {
@@ -49,7 +54,6 @@ if __name__ == "__main__":
         'init_std': 1.0,
         'std_type': 'scalar'
     }
-    model_path = '/home/yun/data/git_projects/mjlab/src/mjlab/tasks/velocity/config/balance_car_v2/model_999.pt'
     model = MLPModel(obs=obs, obs_groups=obs_groups, obs_set='actor', output_dim=2, hidden_dims=(24,12), obs_normalization=True, distribution_cfg=distribution_cfg)
     loaded_dict = torch.load(model_path, map_location=device, weights_only=False)
     model.load_state_dict(loaded_dict['actor_state_dict'], strict=True)
@@ -68,5 +72,4 @@ if __name__ == "__main__":
     )
     
     # 3. 执行验证
-    onnx_model_path = "/home/yun/data/git_projects/mjlab/src/mjlab/tasks/velocity/config/balance_car_v2/2026-10-27_11-58-34.onnx"
     is_consistent = verify_onnx_consistency(model, onnx_model_path, dummy)
