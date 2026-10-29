@@ -34,7 +34,7 @@ def verify_onnx_consistency(pytorch_model, onnx_path, dummy_input):
     print(ort_output_np)
 
 if __name__ == "__main__":
-    cur_dir = "D:\\Git-Project\\mjlab\\src\\mjlab\\tasks\\velocity\\config\\balance_car_v2"
+    cur_dir = "D:\\Git-Project\\mjlab\\src\\mjlab\\tasks\\velocity\\config\\balance_car_v2\\sim2real"
     model_path = os.path.join(cur_dir, 'model_999.pt')
     onnx_model_path = os.path.join(cur_dir, "2026-10-27_11-58-34.onnx")
     
